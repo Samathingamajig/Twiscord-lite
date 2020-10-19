@@ -54,11 +54,20 @@ class DiscordBot(discord_commands.Bot):
       return # Wrong channel
   
   async def handle_commands(self, message):
-    content = message.clean_content[len(self.command_prefix):]
-    if content.startswith('twitch'):
-      await self.twitch(message)
+    """
+    Class based discord.ext.commands.Bot extenders don't have
+    a simple way to handle functional based commands.
+    
+    If you're making a discord bot that is class based like this,
+    then I'd recommend using this.
+    """
+    command = message.clean_content[len(self.command_prefix):].split(" ")[0] # Get the first word after the prefix
+    arguments = message.clean_content[len(self.command_prefix):].split(" ")[1:] # Get a list of all the arguments after the prefix and after the command keyword
+    
+    if command == 'twitch':
+      await self.twitch(message, arguments)
   
-  async def twitch(self, message):
+  async def twitch(self, message, arguments):
     await message.channel.send(self.twitch_bot.twitch_link)
 
 if __name__ == "__main__":

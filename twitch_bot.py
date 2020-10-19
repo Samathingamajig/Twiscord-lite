@@ -1,10 +1,10 @@
 import os # for importing environment variables for the bots to use
-from twitchio.ext import commands as twitch_commands
+from twitchio.ext import commands as twitch_commands # Import the commands extension; also has the Bot subclass
 
 class TwitchBot(twitch_commands.Bot):
   def __init__(self):
+    # This initializing method is run when the bot is instantiated
     irc_token = os.environ['TWITCH_TMI_TOKEN']
-    # client_secret = os.environ['TWITCH_CLIENT_SECRET']
     self.client_id = os.environ['TWITCH_CLIENT_ID']
     nick = os.environ['TWITCH_BOT_NICK'].lower()
     prefix = os.environ['TWITCH_BOT_PREFIX']
@@ -53,8 +53,12 @@ class TwitchBot(twitch_commands.Bot):
   
   @twitch_commands.command(name="discord")
   async def discord(self, ctx):
+    # If people type PREFIXdiscord, then reply with the discord server invite link
+    # For example, if the prefix was '!', then !discord would run this
     await ctx.send(self.discord_bot.invite_link)
 
 if __name__ == "__main__":
+  # This file shouldn't be run, this is just the class extender
+  # ./main.py is the file that should be ran
   print("Sorry, this isn't the file you meant to run.")
   print("You need to run for Twiscord to work ./main.py")

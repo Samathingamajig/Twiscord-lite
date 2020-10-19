@@ -1,6 +1,6 @@
 import os # for importing environment variables for the bots to use
 import discord
-from discord.ext import commands as discord_commands, tasks
+from discord.ext import commands as discord_commands
 
 class DiscordBot(discord_commands.Bot):
   def __init__(self):
@@ -8,7 +8,6 @@ class DiscordBot(discord_commands.Bot):
     self.channel_id = int(os.environ['DISCORD_CHANNEL_ID'])
     self.channel = None # Will be set later
     self.invite_link = os.environ['DISCORD_INVITE_LINK']
-    print("Discord __init__")
     self._is_ready_ = False
     
     command_prefix = os.environ['DISCORD_BOT_PREFIX']
@@ -19,14 +18,13 @@ class DiscordBot(discord_commands.Bot):
     # This function overrides the default `start` function
     # since I want to be able to just call `start` from
     # `main.py` and configure the token from here
-    print("Discord start")
     return super().start(self.token)
   
   async def on_ready(self):
     print(f"Discord Ready | {self.user}")
     self.channel = self.get_channel(self.channel_id)
     self._is_ready_ = True
-    if self.twitch_bot._is_ready_:
+    if self.twitch_bot._is_ready_: # If both bots are ready/set up, send message to discord and twitch channel
       content = "[Twiscord] Discord and Twitch bots are set up."
       await self.channel.send(content)
       await self.twitch_bot.channel.send(content)
@@ -47,8 +45,8 @@ class DiscordBot(discord_commands.Bot):
       print("[discord]", end=" ")
       content = f"{'[' + str(message.author.top_role) + '] ' if message.author.top_role else ''}{message.author} » {message.clean_content}"[:300] # Only take the first 300 characters, 500 is officially the max but 300 should be all you need
       print(content)
-      if message.clean_content.startswith(self.command_prefix): await self.handle_commands(message)
-      else: await self.twitch_bot.channel.send(content)
+      if message.clean_content.startswith(self.command_prefix): await self.handle_commands(message) # If the message starts with the prefix, then send the message to self.handle_commands 
+      else: await self.twitch_bot.channel.send(content) # If it's not a command, then send the message to the twitch chat
       
     else:
       return # Wrong channel
@@ -68,8 +66,12 @@ class DiscordBot(discord_commands.Bot):
       await self.twitch(message, arguments)
   
   async def twitch(self, message, arguments):
+    # If people type PREFIXtwitch, then reply with the twitch channel link
+    # For example, if the prefix was '!', then !twitch would run this
     await message.channel.send(self.twitch_bot.twitch_link)
 
 if __name__ == "__main__":
+  # This file shouldn't be run, this is just the class extender
+  # ./main.py is the file that should be ran
   print("Sorry, this isn't the file you meant to run.")
   print("You need to run for Twiscord to work ./main.py")

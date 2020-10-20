@@ -16,7 +16,7 @@ Twiscord is directly built upon 3 libraries:
 
 2. Go to Settings » System » About (left) » System info (top right) » Advanced system settings (left) » Enviornment Variables ... » Path » Edit » Add this: `C:\Users\YOURUSERNAMEGOESHERE\AppData\Roaming\Python\Python38\Scripts` (make sure to change the username). This lets `pipenv` run as a global script.
 
-3. (Assuming you have installed Git) Run this: `https://github.com/Samathingamajig/Twiscord.git` in your parent directly to clone this repo into there. (**don't** create your own folder and cd into it, because clone makes the new folder either way)
+3. (Assuming you have installed Git) Run this: `git clone https://github.com/Samathingamajig/Twiscord.git` in your parent directly to clone this repo into there. (**don't** create your own folder and cd into it, because clone makes the new folder either way)
 
 4. Run this: `pipenv install` in this working directory, this will install all the necessary libraries through pipenv.
 

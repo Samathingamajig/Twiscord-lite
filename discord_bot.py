@@ -9,6 +9,7 @@ class DiscordBot(discord_commands.Bot):
     self.channel = None # Will be set later
     self.invite_link = os.environ['DISCORD_INVITE_LINK']
     self._is_ready_ = False
+    self.should_print = os.environ['PRINT_MESSAGES_TO_CONSOLE'].lower() in ("yes", "true", "t", "1")
     
     command_prefix = os.environ['DISCORD_BOT_PREFIX']
     
@@ -43,9 +44,8 @@ class DiscordBot(discord_commands.Bot):
     
     
     if message.channel.id == self.channel_id:
-      print("[discord]", end=" ")
       content = f"{'[' + str(message.author.top_role) + '] ' if message.author.top_role else ''}{message.author} » {message.clean_content}"[:300] # Only take the first 300 characters, 500 is officially the max but 300 should be all you need
-      print(content)
+      if self.should_print: print(f"[discord] {content}")
       if message.clean_content.startswith(self.command_prefix): await self.handle_commands(message) # If the message starts with the prefix, then send the message to self.handle_commands 
       else: await self.twitch_bot.channel.send(content) # If it's not a command, then send the message to the twitch chat
       

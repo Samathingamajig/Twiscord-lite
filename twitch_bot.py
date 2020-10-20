@@ -11,6 +11,8 @@ class TwitchBot(twitch_commands.Bot):
     self.initial_channel = os.environ['TWITCH_CHANNEL'].lower()
     self.twitch_link = f"https://twitch.tv/{self.initial_channel}"
     self._is_ready_ = False
+    self.should_print = os.environ['PRINT_MESSAGES_TO_CONSOLE'].lower() in ("yes", "true", "t", "1")
+    
     super().__init__(irc_token=irc_token, client_id=self.client_id, nick=nick, prefix=prefix, initial_channels=[f"#{self.initial_channel}"])  # For some reason, twitch wants a `#` at the beginning of the channel name
   
   async def event_ready(self):
@@ -31,7 +33,6 @@ class TwitchBot(twitch_commands.Bot):
       print("[Twiscord] Discord not initialized.")
       await message.channel.send("[Twiscord] Discord not initialized.")
       return
-    print("[twitch]", end=" ")
     
     sender_name = message.author.tags['display-name'] if 'display-name' in message.author.tags.keys() else message.author.name # Have to format with capitalization if it exists
     
@@ -45,7 +46,7 @@ class TwitchBot(twitch_commands.Bot):
       role = "Subscriber"
     
     content = f"{'**' + role + '** ' if role else ''}{sender_name} » {message.content}"
-    print(content)
+    if self.should_print: print(f"[twitch ] {content}")
     await self.discord_bot.channel.send(content)
     
     # Have to call self.handle_commands since this is class-based

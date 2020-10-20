@@ -7,13 +7,13 @@ class TwitchBot(twitch_commands.Bot):
     irc_token = os.environ['TWITCH_TMI_TOKEN']
     self.client_id = os.environ['TWITCH_CLIENT_ID']
     nick = os.environ['TWITCH_BOT_NICK'].lower()
-    prefix = os.environ['TWITCH_BOT_PREFIX']
+    self.prefix = os.environ['TWITCH_BOT_PREFIX']
     self.initial_channel = os.environ['TWITCH_CHANNEL'].lower()
     self.twitch_link = f"https://twitch.tv/{self.initial_channel}"
     self._is_ready_ = False
     self.should_print = os.environ['PRINT_MESSAGES_TO_CONSOLE'].lower() in ("yes", "true", "t", "1")
     
-    super().__init__(irc_token=irc_token, client_id=self.client_id, nick=nick, prefix=prefix, initial_channels=[f"#{self.initial_channel}"])  # For some reason, twitch wants a `#` at the beginning of the channel name
+    super().__init__(irc_token=irc_token, client_id=self.client_id, nick=nick, prefix=self.prefix, initial_channels=[f"#{self.initial_channel}"])  # For some reason, twitch wants a `#` at the beginning of the channel name
   
   async def event_ready(self):
     print(f"Twitch Ready | {self.nick}") 
@@ -48,7 +48,7 @@ class TwitchBot(twitch_commands.Bot):
     content = f"{'**' + role + '** ' if role else ''}{sender_name} » {message.content}"
     if self.should_print: print(f"[twitch ] {content}")
     
-    if message.startswith(self.prefix):
+    if message.content.startswith(self.prefix):
       # Have to call self.handle_commands since this is class-based
       await self.handle_commands(message)
     else:

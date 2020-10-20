@@ -17,7 +17,8 @@ class DiscordBot(discord_commands.Bot):
   def start(self):
     # This function overrides the default `start` function
     # since I want to be able to just call `start` from
-    # `main.py` and configure the token from here
+    # `main.py` and configure the token from here.
+    # This returns the co-routine of the bot, needed for running both bots at once.
     return super().start(self.token)
   
   async def on_ready(self):

@@ -47,10 +47,14 @@ class TwitchBot(twitch_commands.Bot):
     
     content = f"{'**' + role + '** ' if role else ''}{sender_name} » {message.content}"
     if self.should_print: print(f"[twitch ] {content}")
-    await self.discord_bot.channel.send(content)
     
-    # Have to call self.handle_commands since this is class-based
-    await self.handle_commands(message)
+    if message.startswith(self.prefix):
+      # Have to call self.handle_commands since this is class-based
+      await self.handle_commands(message)
+    else:
+      # Only send to the discord channel if it's not a command
+      await self.discord_bot.channel.send(content)
+    
   
   @twitch_commands.command(name="discord")
   async def discord(self, ctx):

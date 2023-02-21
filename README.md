@@ -1,4 +1,4 @@
-![Twiscord](https://raw.githubusercontent.com/Samathingamajig/Twiscord/master/twiscord-big-logo.png)
+![Twiscord](https://raw.githubusercontent.com/Samathingamajig/Twiscord-lite/master/twiscord-big-logo.png)
 # Twiscord: Sync Twitch and Discord chat with Python
 
 ## What is Twiscord?
